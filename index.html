@@ -1038,10 +1038,11 @@ const ABOUT = {
 const HIST = {n:4354, higher:.677, median:.112, further:.096};
 
 /* ---------- state ---------- */
-const KEY = 'idu-demo-v3';
+const KEY = 'idu-demo-v4';
 const SEED_DATE = '2026-05-04';
+/* starter portfolio: 4 positions x 20% + 20% cash, picked to be in profit so a first-time visitor starts green */
 const seed = () => { const i = idx(SEED_DATE);
-  return [['EUNL',3000],['ASML',1500],['NVDA',1500],['LHV',1000],['GOLD',1000]].map(([sym,amt]) => ({type:'buy',sym,i,eur:amt,units:amt/pe(sym,i),src:'b'})); };
+  return [['EUNL',2000],['GOOGL',2000],['SAP',2000],['GOLD',2000]].map(([sym,amt]) => ({type:'buy',sym,i,eur:amt,units:amt/pe(sym,i),src:'b'})); };
 let tx;
 try { tx = JSON.parse(localStorage.getItem(KEY)) || seed(); } catch(e) { tx = seed(); }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(tx)); } catch(e) {} };
