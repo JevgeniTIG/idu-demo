@@ -603,6 +603,8 @@ const LOCALES = {en:'en-IE', et:'et-EE', lv:'lv-LV', lt:'lt-LT', fi:'fi-FI', sv:
 const LANG_KEY = 'idu-lang';
 let lang = 'en';
 try { const s = localStorage.getItem(LANG_KEY); if (STR[s]) lang = s; } catch(e) {}
+const HASH = new URLSearchParams(location.hash.slice(1));   /* #l=lv opens the demo in that language */
+if (STR[HASH.get('l')]) lang = HASH.get('l');
 const T = () => STR[lang];
 const LOC = () => LOCALES[lang];
 
@@ -1339,12 +1341,17 @@ sheet.querySelector('.grab').addEventListener('pointerdown', e => y0 = e.clientY
 sheet.addEventListener('pointerup', e => { if (y0 != null && e.clientY - y0 > 60) closeSheet(); y0 = null; });
 
 /* ---------- branding ---------- */
-const BRANDS = [['#0d7c86','#fff'],['#4b4fd6','#fff'],['#1f7a3d','#fff'],['#e8590c','#fff'],['#111827','#fff']];
+/* default teal, then the primary colours measured on the target banks' websites (Nov 2026), then neutral dark */
+const BRANDS = [['#0d7c86','#fff'],['#3859bb','#fff'],['#e3002c','#fff'],['#004bc5','#fff'],['#111827','#fff']];
 const sw = document.getElementById('swatches');
 let brandIdx = 0;
+const setBrand = k => { brandIdx = k; const [c, ink] = BRANDS[k];
+  document.documentElement.style.setProperty('--brand', c); document.documentElement.style.setProperty('--brand-ink', ink); };
+/* a link can open the demo in a bank's colour: #c=e3002c (any 6-digit hex) */
+{ const c = (HASH.get('c') || '').toLowerCase();
+  if (/^[0-9a-f]{6}$/.test(c)) { let k = BRANDS.findIndex(([b]) => b === '#' + c); if (k < 0) k = BRANDS.push(['#' + c, '#fff']) - 1; setBrand(k); } }
 const drawSwatches = () => { sw.innerHTML = BRANDS.map(([c],k) => `<button class="swatch" style="--c:${c}" aria-label="${T().brandA(k+1)}" aria-pressed="${k===brandIdx}" data-brand="${k}"></button>`).join(''); };
-sw.addEventListener('click', e => { const b = e.target.closest('[data-brand]'); if (!b) return; brandIdx = +b.dataset.brand; const [c, ink] = BRANDS[brandIdx];
-  document.documentElement.style.setProperty('--brand', c); document.documentElement.style.setProperty('--brand-ink', ink);
+sw.addEventListener('click', e => { const b = e.target.closest('[data-brand]'); if (!b) return; setBrand(+b.dataset.brand);
   drawSwatches(); e.stopPropagation(); });
 document.getElementById('reset').addEventListener('click', e => { e.stopPropagation(); tx = seed(); save(); closeSheet(); bStartPref = 6; pRange = 'all'; selectTab('portfolio'); notify(T().tReset); });
 
