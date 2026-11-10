@@ -11,7 +11,7 @@
 <title>Idu Practice</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
 /* Layout: a showroom (pitch + branding controls) beside a phone that holds the white-label widget; on phones the widget fills the screen. */
 :root{
@@ -1367,7 +1367,8 @@ function applyLang(){
 }
 /* ---------- bank typography: presets, or the bank's own font file ---------- */
 const FONTS = [['Geist','"Geist", ui-sans-serif, system-ui, sans-serif'], ['IBM Plex Sans','"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif'],
-  ['Nunito Sans','"Nunito Sans", ui-sans-serif, system-ui, sans-serif'], ['Lora','"Lora", Georgia, serif']];
+  ['Nunito Sans','"Nunito Sans", ui-sans-serif, system-ui, sans-serif'], ['Lora','"Lora", Georgia, serif'],
+  ['Roboto','"Roboto", ui-sans-serif, system-ui, sans-serif']];
 const screenEl = document.getElementById('screen'), fontsEl = document.getElementById('fonts'), fontFile = document.getElementById('fontFile');
 let fontPick = 0, customFont = null;   // customFont = file name of an uploaded font
 function drawFonts(){
@@ -1392,6 +1393,9 @@ fontFile.addEventListener('change', async () => {
 document.getElementById('lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; e.stopPropagation();
   lang = b.dataset.lang; try { localStorage.setItem(LANG_KEY, lang); } catch(err) {} applyLang(); });
 
+/* #f=roboto opens the demo with that font preset (first word of its name) */
+{ const k = FONTS.findIndex(([n]) => n.split(' ')[0].toLowerCase() === (HASH.get('f') || '').toLowerCase());
+  if (k >= 0) { fontPick = k; screenEl.style.setProperty('--wfont', FONTS[k][1]); } }
 applyLang();
 })();
 </script>
